@@ -27,3 +27,15 @@ def test_no_matching_lines(sample_file, tmp_path, capsys):
 
     captured = capsys.readouterr()
     assert "No matching lines found" in captured.out
+
+
+def test_matching_lines(sample_file, tmp_path, capsys):
+    output_file = tmp_path / "filtered.txt"
+    main.filter_file_by_keyword(sample_file, "Keyword", tmp_path)
+
+    assert output_file.exists()
+    content = output_file.read_text(encoding="utf-8").strip()
+    assert content == "Keyword here"
+
+    captured = capsys.readouterr()
+    assert f"Filtered lines written to 'filtered.txt' in {tmp_path}" in captured.out
